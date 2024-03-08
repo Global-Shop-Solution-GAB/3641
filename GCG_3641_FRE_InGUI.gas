@@ -1,0 +1,284 @@
+Program.Sub.ScreenSU.Start
+gui.Form1..create
+gui.Form1..caption("Tool Reason Input")
+gui.Form1..size(8445,2175)
+gui.Form1..minx(0)
+gui.Form1..miny(0)
+gui.Form1..position(0,0)
+gui.Form1..event(unload,form1_unload)
+gui.Form1..alwaysontop(False)
+gui.Form1..fontname("Arial")
+gui.Form1..fontsize(8)
+gui.Form1..forecolor(0)
+gui.Form1..fontstyle(,,,,)
+gui.Form1..BackColor(-2147483633)
+gui.Form1..controlbox(True)
+gui.Form1..maxbutton(True)
+gui.Form1..minbutton(True)
+gui.Form1..mousepointer(0)
+gui.Form1..moveable(True)
+gui.Form1..sizeable(True)
+gui.Form1..ShowInTaskBar(True)
+gui.Form1..titlebar(True)
+gui.Form1.lblTool.create(label,"Tool Number",True,1935,255,1,200,200,True,0,Arial,8,-2147483633,0)
+gui.Form1.lblTool.defaultvalue("")
+gui.Form1.lblTool.controlgroup(0)
+gui.Form1.txtTool.create(textbox,"",True,2340,300,0,200,500,True,0,Arial,8,-2147483643,1)
+gui.Form1.txtTool.event(lostfocus,txttool_lostfocus)
+gui.Form1.txtTool.defaultvalue("")
+gui.Form1.txtTool.controlgroup(0)
+gui.Form1.cmdBrowser.create(button)
+gui.Form1.cmdBrowser.caption("^")
+gui.Form1.cmdBrowser.visible(True)
+gui.Form1.cmdBrowser.size(300,375)
+gui.Form1.cmdBrowser.zorder(0)
+gui.Form1.cmdBrowser.position(2605,465)
+gui.Form1.cmdBrowser.enabled(True)
+gui.Form1.cmdBrowser.fontname("Arial")
+gui.Form1.cmdBrowser.fontsize(8)
+gui.Form1.cmdBrowser.event(click,cmdbrowser_click)
+gui.Form1.cmdBrowser.defaultvalue("")
+gui.Form1.cmdBrowser.controlgroup(0)
+gui.Form1.ddlReason.create(dropdownlist)
+gui.Form1.ddlReason.visible(True)
+gui.Form1.ddlReason.size(2985,330)
+gui.Form1.ddlReason.zorder(0)
+gui.Form1.ddlReason.position(3200,500)
+gui.Form1.ddlReason.enabled(True)
+gui.Form1.ddlReason.fontname("Arial")
+gui.Form1.ddlReason.fontsize(8)
+gui.Form1.ddlReason.defaultvalue("")
+gui.Form1.ddlReason.controlgroup(0)
+gui.Form1.lblReason.create(label,"Reason",True,1935,255,1,3200,200,True,0,Arial,8,-2147483633,0)
+gui.Form1.lblReason.defaultvalue("")
+gui.Form1.lblReason.controlgroup(0)
+gui.Form1.cmdSave.create(button)
+gui.Form1.cmdSave.caption("Update")
+gui.Form1.cmdSave.visible(True)
+gui.Form1.cmdSave.size(855,375)
+gui.Form1.cmdSave.zorder(0)
+gui.Form1.cmdSave.position(200,900)
+gui.Form1.cmdSave.enabled(True)
+gui.Form1.cmdSave.fontname("Arial")
+gui.Form1.cmdSave.fontsize(8)
+gui.Form1.cmdSave.event(click,cmdsave_click)
+gui.Form1.cmdSave.defaultvalue("")
+gui.Form1.cmdSave.controlgroup(0)
+
+
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+F.Intrinsic.Control.SetErrorHandler("Main_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+'Attached to hook 15934  Clock into Job on the GuI
+'Created by SKC on 3/15/16 for Fred R Rippy
+'Checking to see if we need to save tool reason to custom table.
+'The amount is saved at time of job update and will be a different program.
+
+
+V.Local.ssql.Declare(String)
+V.Local.sWC.Declare(String)
+V.Local.sPart.Declare(String)
+V.Local.iCount.Declare(Long)
+
+V.Local.sWC.Set(V.Passed.009004)
+V.Local.sPart.Set(V.Passed.000132)
+'make sure the work center is the ones we need.
+F.Intrinsic.Control.If(V.Local.sWC.Trim,=,"RSHR","OR",V.Local.sWC.Trim,=,"REPR")
+'Testing workcenter
+'F.Intrinsic.Control.If(V.Local.sWC.Trim,=,"RSHR","OR",V.Local.sWC.Trim,=,"DBRR")
+	F.ODBC.Connection!conx.OpenConnection(V.Ambient.PDSN,V.Ambient.PUser,V.Ambient.PPass)
+	'get the valid reason from the table
+	V.Local.sSql.Set("Select * From GCG_3641_FRE_Reason Order by Reason")
+	F.ODBC.Connection!conx.OpenLocalRecordsetRO("rstReason",V.Local.sSql)
+	'add to drop down list
+	F.Intrinsic.Control.DoUntil(V.ODBC.conx!rstReason.EOF,=,True)
+		Gui.Form1.ddlReason.AddItem(V.ODBC.conx!rstReason.FieldValTrim!Reason,V.Local.iCount)
+		F.Intrinsic.Math.Add(V.Local.iCount,1,V.Local.iCount)
+		F.ODBC.conx!rstReason.MoveNext
+	F.Intrinsic.Control.Loop
+	F.ODBC.conx!rstReason.Close
+
+	Gui.Form1.ddlReason.ListIndex(0)
+	Gui.Form1.txtTool.Text(V.Local.sPart.Trim)
+	Gui.Form1..Show
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Main_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3641_FRE_InGUI.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Form1_unload)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.Main.End
+
+program.sub.form1_unload.start
+F.Intrinsic.Control.SetErrorHandler("form1_unload_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+F.ODBC.Connection!conx.Close
+F.Intrinsic.Control.End
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("form1_unload_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3641_FRE_InGUI.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End
+Function.Intrinsic.Control.EndIf
+
+
+program.sub.form1_unload.end
+
+program.sub.cmdbrowser_click.start
+F.Intrinsic.Control.SetErrorHandler("cmdbrowser_click_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+V.Local.sRet.Declare(String)
+
+F.Intrinsic.UI.Browser(105,"",V.Local.sRet)
+'Part browser
+F.Intrinsic.Control.If(V.Local.sRet,!=,"***CANCEL***")
+	F.Intrinsic.String.Split(V.Local.sRet,"*!*",V.Local.sRet)
+	Gui.Form1.txtTool.Text(V.Local.sRet(0))
+	Gui.Form1.ddlReason.SetFocus
+F.Intrinsic.Control.Else
+	Gui.Form1.txtTool.SetFocus
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("cmdbrowser_click_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3641_FRE_InGUI.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(form1_unload)
+Function.Intrinsic.Control.EndIf
+
+
+program.sub.cmdbrowser_click.end
+
+program.sub.cmdsave_click.start
+F.Intrinsic.Control.SetErrorHandler("cmdsave_click_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+V.Local.sSql.Declare(String)
+V.Local.sWC.Declare(String)
+V.Local.sPart.Declare(String)
+V.Local.sDesc.Declare(String)
+V.Local.sJob.Declare(String)
+V.Local.sSuffix.Declare(String)
+V.Local.sSeq.Declare(String)
+V.Local.sEmpID.Declare(String)
+V.Local.sName.Declare(String)
+V.Local.sTool.Declare(String)
+V.Local.sReason.Declare(String)
+
+V.Local.sWC.Set(V.Passed.009004)
+V.Local.sDesc.Set(V.Passed.000134)
+V.Local.sJob.Set(V.Passed.009000)
+V.Local.sSuffix.Set(V.Passed.009001)
+V.Local.sSeq.Set(V.Passed.009002)
+V.Local.sEmpID.Set(V.Passed.009993)
+V.Local.sName.Set(V.Passed.009994)
+
+V.Local.sPart.Set(V.Screen.Form1!txtTool.Text)
+V.Local.sReason.Set(V.Screen.Form1!ddlReason.Text)
+
+'make sure part is valid
+F.Intrinsic.String.Build("Select Part, Description from Inventory_Mstr where Part = '{0}'",V.Local.sPart,V.Local.sSql)
+F.ODBC.Connection!conx.OpenLocalRecordsetRO("rstPart",V.Local.sSql)
+F.Intrinsic.Control.If(V.ODBC.conx!rstPart.EOF,=,True)
+	F.Intrinsic.UI.Msgbox("Select Valid Part Number","Invalid Part")
+	Gui.Form1.txtTool.Text("")
+	F.Intrinsic.Control.ExitSub
+F.Intrinsic.Control.Else
+	V.Local.sDesc.Set(V.ODBC.conx!rstPart.FieldValTrim!Description)
+F.Intrinsic.Control.EndIf
+F.ODBC.conx!rstPart.Close
+'Add the record with the reason and job info
+V.Local.sSql.Set("Select * From GCG_3641_FRE_GUIWC")
+F.ODBC.Connection!conx.OpenLocalRecordsetRW("rstWC",V.Local.sSql)
+F.ODBC.conx!rstWC.AddNew
+F.ODBC.conx!rstWC.Set!Job(V.Local.sJob.Trim)
+F.ODBC.conx!rstWC.Set!Suffix(V.Local.sSuffix.Trim)
+F.ODBC.conx!rstWC.Set!Seq(V.Local.sSeq.Trim)
+F.ODBC.conx!rstWC.Set!WorkCenter(V.Local.sWC.Trim)
+F.ODBC.conx!rstWC.Set!EmpID(V.Local.sEmpID.Trim)
+F.ODBC.conx!rstWC.Set!EmpName(V.Local.sName.Trim)
+F.ODBC.conx!rstWC.Set!Part(V.Local.sPart.Trim)
+F.ODBC.conx!rstWC.Set!Description(V.Local.sDesc.Trim)
+F.ODBC.conx!rstWC.Set!Reason(V.Local.sReason.Trim)
+F.ODBC.conx!rstWC.Update
+F.ODBC.conx!rstWC.Close
+
+F.Intrinsic.Control.CallSub(Form1_unload)
+
+
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("cmdsave_click_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3641_FRE_InGUI.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Form1_unload)
+Function.Intrinsic.Control.EndIf
+
+
+program.sub.cmdsave_click.end
+
+program.sub.txttool_lostfocus.start
+F.Intrinsic.Control.SetErrorHandler("txttool_lostfocus_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+V.Local.sSql.Declare(String)
+V.Local.sPart.Declare(String)
+
+V.Local.sPart.Set(V.Screen.Form1!txtTool.Text)
+'check that the part number is valid
+
+F.Intrinsic.String.Build("Select Part from Inventory_Mstr where Part = '{0}'",V.Local.sPart,V.Local.sSql)
+F.ODBC.Connection!conx.OpenLocalRecordsetRO("rstPart",V.Local.sSql)
+F.Intrinsic.Control.If(V.ODBC.conx!rstPart.EOF,=,True)
+	F.Intrinsic.UI.Msgbox("Select Valid Part Number","Invalid Part")
+	Gui.Form1.txtTool.Text("")
+F.Intrinsic.Control.EndIf
+F.ODBC.conx!rstPart.Close
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("txttool_lostfocus_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3641_FRE_InGUI.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Form1_unload)
+Function.Intrinsic.Control.EndIf
+
+
+program.sub.txttool_lostfocus.end
+
+Program.Sub.Comments.Start
+${$0$}$GCG_3641_FRE_InGUI$}$SKC$}$3/14/2016
+Program.Sub.Comments.End
+
