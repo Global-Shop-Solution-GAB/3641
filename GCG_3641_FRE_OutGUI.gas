@@ -1,0 +1,357 @@
+Program.Sub.ScreenSU.Start
+gui.Form1..create
+gui.Form1..caption("Tool Reason Update")
+gui.Form1..size(5895,5430)
+gui.Form1..minx(0)
+gui.Form1..miny(0)
+gui.Form1..position(0,0)
+gui.Form1..event(unload,form1_unload)
+gui.Form1..alwaysontop(False)
+gui.Form1..fontname("Arial")
+gui.Form1..fontsize(8)
+gui.Form1..forecolor(0)
+gui.Form1..fontstyle(,,,,)
+gui.Form1..BackColor(-2147483633)
+gui.Form1..controlbox(True)
+gui.Form1..maxbutton(True)
+gui.Form1..minbutton(True)
+gui.Form1..mousepointer(0)
+gui.Form1..moveable(True)
+gui.Form1..sizeable(True)
+gui.Form1..ShowInTaskBar(True)
+gui.Form1..titlebar(True)
+gui.Form1.lblPunch.create(label,"Amt Removed Punch",True,1935,255,1,200,200,True,0,Arial,8,-2147483633,0)
+gui.Form1.lblPunch.defaultvalue("")
+gui.Form1.lblPunch.controlgroup(0)
+gui.Form1.txtPunch.create(textbox,"",True,1470,300,0,200,500,True,0,Arial,8,-2147483643,1)
+gui.Form1.txtPunch.numericonly(1)
+gui.Form1.txtPunch.event(lostfocus,txtpunch_lostfocus)
+gui.Form1.txtPunch.defaultvalue("")
+gui.Form1.txtPunch.controlgroup(0)
+gui.Form1.lblDie.create(label,"Amt Removed Die",True,1935,255,1,2030,200,True,0,Arial,8,-2147483633,0)
+gui.Form1.lblDie.defaultvalue("")
+gui.Form1.lblDie.controlgroup(0)
+gui.Form1.txtDie.create(textbox,"",True,1470,300,0,2030,500,True,0,Arial,8,-2147483643,1)
+gui.Form1.txtDie.numericonly(1)
+gui.Form1.txtDie.event(lostfocus,txtdie_lostfocus)
+gui.Form1.txtDie.defaultvalue("")
+gui.Form1.txtDie.controlgroup(0)
+gui.Form1.lblStrip.create(label,"Amt Removed Stripper",True,1935,255,1,3855,200,True,0,Arial,8,-2147483633,0)
+gui.Form1.lblStrip.defaultvalue("")
+gui.Form1.lblStrip.controlgroup(0)
+gui.Form1.txtStrip.create(textbox,"",True,1470,300,0,3855,500,True,0,Arial,8,-2147483643,1)
+gui.Form1.txtStrip.numericonly(1)
+gui.Form1.txtStrip.event(lostfocus,txtstrip_lostfocus)
+gui.Form1.txtStrip.defaultvalue("")
+gui.Form1.txtStrip.controlgroup(0)
+gui.Form1.lblTotPunch.create(label,"Punch Total",True,1935,255,1,200,1130,True,0,Arial,8,-2147483633,0)
+gui.Form1.lblTotPunch.defaultvalue("")
+gui.Form1.lblTotPunch.controlgroup(0)
+gui.Form1.txtPunchTot.create(textbox,"",True,1470,300,0,200,1380,False,0,Arial,8,-2147483643,1)
+gui.Form1.txtPunchTot.defaultvalue("")
+gui.Form1.txtPunchTot.controlgroup(0)
+gui.Form1.lblDieTot.create(label,"Die Total",True,1935,255,1,2000,1130,True,0,Arial,8,-2147483633,0)
+gui.Form1.lblDieTot.defaultvalue("")
+gui.Form1.lblDieTot.controlgroup(0)
+gui.Form1.txtDieTot.create(textbox,"",True,1470,300,0,2030,1380,False,0,Arial,8,-2147483643,1)
+gui.Form1.txtDieTot.defaultvalue("")
+gui.Form1.txtDieTot.controlgroup(0)
+gui.Form1.lblStripTot.create(label,"Stripper Total",True,1935,255,1,3855,1130,True,0,Arial,8,-2147483633,0)
+gui.Form1.lblStripTot.defaultvalue("")
+gui.Form1.lblStripTot.controlgroup(0)
+gui.Form1.txtStripTot.create(textbox,"",True,1470,300,0,3855,1380,False,0,Arial,8,-2147483643,1)
+gui.Form1.txtStripTot.defaultvalue("")
+gui.Form1.txtStripTot.controlgroup(0)
+gui.Form1.lblNote1.create(label,"Additional Notes 1",True,1935,255,1,200,2075,True,0,Arial,8,-2147483633,0)
+gui.Form1.lblNote1.defaultvalue("")
+gui.Form1.lblNote1.controlgroup(0)
+gui.Form1.txtNote1.create(textbox,"",True,5145,300,0,200,2360,True,0,Arial,8,-2147483643,1)
+gui.Form1.txtNote1.defaultvalue("")
+gui.Form1.txtNote1.controlgroup(0)
+gui.Form1.lblNote2.create(label,"Additional Notes 2",True,1935,255,1,200,2775,True,0,Arial,8,-2147483633,0)
+gui.Form1.lblNote2.defaultvalue("")
+gui.Form1.lblNote2.controlgroup(0)
+gui.Form1.txtNote2.create(textbox,"",True,5145,330,0,200,3075,True,0,Arial,8,-2147483643,1)
+gui.Form1.txtNote2.defaultvalue("")
+gui.Form1.txtNote2.controlgroup(0)
+gui.Form1.lblNote3.create(label,"Additional Notes 3",True,1935,255,1,300,3525,True,0,Arial,8,-2147483633,0)
+gui.Form1.lblNote3.defaultvalue("")
+gui.Form1.lblNote3.controlgroup(0)
+gui.Form1.txtNote3.create(textbox,"",True,5145,300,0,200,3805,True,0,Arial,8,-2147483643,1)
+gui.Form1.txtNote3.defaultvalue("")
+gui.Form1.txtNote3.controlgroup(0)
+gui.Form1.cmdSave.create(button)
+gui.Form1.cmdSave.caption("Update")
+gui.Form1.cmdSave.visible(True)
+gui.Form1.cmdSave.size(855,375)
+gui.Form1.cmdSave.zorder(0)
+gui.Form1.cmdSave.position(200,4280)
+gui.Form1.cmdSave.enabled(True)
+gui.Form1.cmdSave.fontname("Arial")
+gui.Form1.cmdSave.fontsize(8)
+gui.Form1.cmdSave.event(click,cmdsave_click)
+gui.Form1.cmdSave.defaultvalue("")
+gui.Form1.cmdSave.controlgroup(0)
+
+
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+F.Intrinsic.Control.SetErrorHandler("Main_Err")
+F.Intrinsic.Control.ClearErrors
+'Created by SKC for Fred R Rippy on 3/17/2016
+'This will capture the amount for punch, die, and stripper and update the record in the Table
+'the screen totals will be displayed on the screen for the job, suffix, seq.
+
+V.Local.sError.Declare(String)
+V.Local.sLeave.Declare(String)
+V.Local.sSql.Declare(String)
+V.Local.sJob.Declare(String)
+V.Local.sSuffix.Declare(String)
+V.Local.sSeq.Declare(String)
+V.Local.sRet.Declare(String)
+V.Local.fPunch.Declare(Float)
+V.Local.fStripper.Declare(Float)
+V.Local.fDie.Declare(Float)
+
+V.Local.sLeave.Set(V.Passed.000008)
+V.Local.sJob.Set(V.Passed.009990)
+V.Local.sSuffix.Set(V.Passed.009991)
+V.Local.sSeq.Set(V.Passed.009992)
+
+F.Intrinsic.Control.If(V.Local.sLeave.Trim,=,"Y")
+	'Check to see if job exists in table.
+	F.Intrinsic.String.Build(" Select EmpID from GCG_3641_FRE_GUIWC where Job = '{0}' and Suffix = '{1}' and Seq = '{2}'",V.Local.sJob,V.Local.sSuffix,V.Local.sSeq,V.Local.sSql)
+	F.ODBC.Connection!conx.ExecuteAndReturn(V.Local.sSql,V.Local.sRet)
+	F.Intrinsic.Control.If(V.Local.sRet.Trim,!=,"")
+		F.ODBC.Connection!conx.OpenConnection(V.Ambient.PDSN,V.Ambient.PUser,V.Ambient.PPass)
+		F.Intrinsic.String.Build("Select Sum(Amt_RMVD_Punch) as Punch, Sum(AMT_RMVD_Die) as Die, Sum(AMT_RMVD_Stripper) as Stripper from GCG_3641_FRE_GUIWC Where Job = '{0}' and Suffix = '{1}' and Seq = '{2}'",V.Local.sJob,V.Local.sSuffix,V.Local.sSeq,V.Local.sSql)
+		F.ODBC.Connection!conx.OpenLocalRecordsetRO("rstSum",V.Local.sSql)
+		F.Intrinsic.Control.If(V.ODBC.conx!rstSum.EOF,!=,False)
+			V.Local.fPunch.Set(V.ODBC.conx!rstSum.FieldVal!Punch)
+			V.Local.fStripper.Set(V.ODBC.conx!rstSum.FieldVal!Stripper)
+			V.Local.fDie.Set(V.ODBC.conx!rstSum.FieldVal!Die)
+		F.Intrinsic.Control.EndIf
+		F.ODBC.conx!rstSum.Close
+		Gui.Form1.txtPunchTot.Text(V.Local.fPunch)
+		Gui.Form1.txtStripTot.Text(V.Local.fStripper)
+		Gui.Form1.txtDieTot.Text(V.Local.fDie)
+		Gui.Form1..Show
+	F.Intrinsic.Control.EndIf
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Main_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3641_FRE_OutGUI.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Form1_unload)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.Main.End
+
+program.sub.cmdsave_click.start
+F.Intrinsic.Control.SetErrorHandler("cmdsave_click_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+V.Local.sSql.Declare(String)
+V.Local.sJob.Declare(String)
+V.Local.sSuffix.Declare(String)
+V.Local.sSeq.Declare(String)
+V.Local.sWC.Declare(String)
+V.Local.sEmp.Declare(String)
+V.Local.sName.Declare(String)
+V.Local.sPart.Declare(String)
+V.Local.sNote1.Declare(String)
+V.Local.sNote2.Declare(String)
+V.Local.sNote3.Declare(String)
+V.Local.fPunch.Declare(Float)
+V.Local.fDie.Declare(Float)
+V.Local.fStrip.Declare(Float)
+V.Local.dDate.Declare(Date)
+
+
+V.Local.fPunch.Set(V.Screen.Form1!txtPunch.Text)
+V.Local.fDie.Set(V.Screen.Form1!txtDie.Text)
+V.Local.fStrip.Set(V.Screen.Form1!txtStrip.Text)
+V.Local.sNote1.Set(V.Screen.Form1!txtNote1.Text)
+V.Local.sNote2.Set(V.Screen.Form1!txtNote2.Text)
+V.Local.sNote3.Set(V.Screen.Form1!txtNote3.Text)
+
+V.Local.dDate.Set(V.Ambient.Now)
+
+V.Local.sJob.Set(V.Passed.009990.Trim)
+V.Local.sSuffix.Set(V.Passed.009991.Trim)
+V.Local.sSeq.Set(V.Passed.009992.Trim)
+V.Local.sWC.Set(V.Passed.000010.Trim)
+V.Local.sEmp.Set(V.Passed.009993.Trim)
+V.Local.sName.Set(V.Passed.009994.Trim)
+
+F.Intrinsic.String.Split(V.Local.sWC," - ",V.Local.sWC)
+
+F.Intrinsic.String.Build("Select Part, Description from Job_Header where Job = '{0}' and suffix = '{1}'",V.Local.sJob,V.Local.sSuffix,V.Local.sSql)
+F.ODBC.Connection!conx.ExecuteAndReturn(V.Local.sSql,V.Local.sPart)
+F.Intrinsic.String.Split(V.Local.sPart,"*!*",V.Local.sPart)
+
+
+
+F.Intrinsic.String.Build("Select * From GCg_3641_FRE_GUIWC where Job = '{0}' and suffix = '{1}' and Seq = '{2}' and EmpID = '{3}'",V.Local.sJob,V.Local.sSuffix,V.Local.sSeq,V.Local.sEmp,V.Local.sSql)
+F.ODBC.Connection!conx.OpenLocalRecordsetRW("rstTool",V.Local.sSql)
+F.Intrinsic.Control.If(V.ODBC.conx!rstTool.EOF,=,True)
+	'Add the values that are missing they should be there but you never know.  We will be missing the reason if this happens.
+	F.ODBC.conx!rstTool.AddNew
+	F.ODBC.conx!rstTool.Set!Job(V.Local.sJob)
+	F.ODBC.conx!rstTool.Set!Suffix(V.Local.sSuffix)
+	F.ODBC.conx!rstTool.Set!Seq(V.Local.sSeq)
+	F.ODBC.conx!rstTool.Set!WorkCenter(V.Local.sWC)
+	F.ODBC.conx!rstTool.Set!EmpID(V.Local.sEmp)
+	F.ODBC.conx!rstTool.Set!EmpName(V.Local.sName)
+	F.ODBC.conx!rstTool.Set!Part(V.Local.sPart(0).Trim)
+	F.ODBC.conx!rstTool.Set!Description(V.Local.sPart(1).Trim)
+F.Intrinsic.Control.EndIf
+
+'Update the amt values and Notes
+F.ODBC.conx!rstTool.Set!AMT_RMVD_Punch(V.Local.fPunch)
+F.ODBC.conx!rstTool.Set!AMT_RMVD_Die(V.Local.fDie)
+F.ODBC.conx!rstTool.Set!AMT_RMVD_Stripper(V.Local.fStrip)
+F.ODBC.conx!rstTool.Set!Note1(V.Local.sNote1.Trim)
+F.ODBC.conx!rstTool.Set!Note2(V.Local.sNote2.Trim)
+F.ODBC.conx!rstTool.Set!Note3(V.Local.sNote3.Trim)
+F.ODBC.conx!rstTool.Set!DateOut(V.Local.dDate)
+F.ODBC.conx!rstTool.Update
+F.ODBC.conx!rstTool.Close
+
+F.Intrinsic.Control.CallSub(Form1_unload)
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("cmdsave_click_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3641_FRE_OutGUI.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Form1_unload)
+Function.Intrinsic.Control.EndIf
+
+
+program.sub.cmdsave_click.end
+
+program.sub.form1_unload.start
+F.Intrinsic.Control.SetErrorHandler("form1_unload_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+F.ODBC.Connection!conx.Close
+F.Intrinsic.Control.End
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("form1_unload_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3641_FRE_OutGUI.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End
+Function.Intrinsic.Control.EndIf
+
+
+program.sub.form1_unload.end
+
+program.sub.txtpunch_lostfocus.start
+F.Intrinsic.Control.SetErrorHandler("txtpunch_lostfocus_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+V.Local.fPunch.Declare(Float)
+V.Local.fPunchTot.Declare(Float)
+
+'Update the total texbox once the user has entered a value
+
+V.Local.fPunch.Set(V.Screen.Form1!txtPunch.Text)
+V.Local.fPunchTot.Set(V.Screen.Form1!txtPunchTot.Text)
+
+F.Intrinsic.Math.Add(V.Local.fPunch,V.Local.fPunchTot,V.Local.fPunchTot)
+Gui.Form1.txtPunchTot.Text(V.Local.fPunchTot)
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("txtpunch_lostfocus_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3641_FRE_OutGUI.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Form1_unload)
+Function.Intrinsic.Control.EndIf
+
+
+program.sub.txtpunch_lostfocus.end
+
+program.sub.txtdie_lostfocus.start
+F.Intrinsic.Control.SetErrorHandler("txtdie_lostfocus_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+V.Local.fDie.Declare(Float)
+V.Local.fDieTot.Declare(Float)
+
+'UPdate the total textbox once the user enters a value
+
+V.Local.fDieTot.Set(V.Screen.Form1!txtDieTot.Text)
+V.Local.fDie.Set(V.Screen.Form1!txtDie.Text)
+
+F.Intrinsic.Math.Add(V.Local.fDie,V.Local.fDieTot,V.Local.fDieTot)
+Gui.Form1.txtDieTot.Text(V.Local.fDieTot)
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("txtdie_lostfocus_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3641_FRE_OutGUI.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Form1_unload)
+Function.Intrinsic.Control.EndIf
+
+
+program.sub.txtdie_lostfocus.end
+
+program.sub.txtstrip_lostfocus.start
+F.Intrinsic.Control.SetErrorHandler("txtstrip_lostfocus_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+V.Local.fStrip.Declare(Float)
+V.Local.fStripTot.Declare(Float)
+
+'Update the total texboxes once the user has entered a value.
+
+V.Local.fStrip.Set(V.Screen.Form1!txtStrip.Text)
+V.Local.fStripTot.Set(V.Screen.Form1!txtStripTot.Text)
+
+F.Intrinsic.Math.Add(V.Local.fStrip,V.Local.fStripTot,V.Local.fStripTot)
+
+Gui.Form1.txtStripTot.Text(V.Local.fStripTot)
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("txtstrip_lostfocus_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3641_FRE_OutGUI.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Form1_unload)
+Function.Intrinsic.Control.EndIf
+
+
+program.sub.txtstrip_lostfocus.end
+
+Program.Sub.Comments.Start
+${$0$}$GCG_3641_FRE_OutGUI$}$SKC$}$3/15/2016
+Program.Sub.Comments.End
+
