@@ -1,0 +1,221 @@
+Program.Sub.ScreenSU.Start
+gui.Form1..create
+gui.Form1..caption("Reason Maintenance")
+gui.Form1..size(8445,2175)
+gui.Form1..minx(0)
+gui.Form1..miny(0)
+gui.Form1..position(0,0)
+gui.Form1..event(unload,form1_unload)
+gui.Form1..alwaysontop(False)
+gui.Form1..fontname("Arial")
+gui.Form1..fontsize(8)
+gui.Form1..forecolor(0)
+gui.Form1..fontstyle(,,,,)
+gui.Form1..BackColor(-2147483633)
+gui.Form1..controlbox(True)
+gui.Form1..maxbutton(True)
+gui.Form1..minbutton(True)
+gui.Form1..mousepointer(0)
+gui.Form1..moveable(True)
+gui.Form1..sizeable(True)
+gui.Form1..ShowInTaskBar(True)
+gui.Form1..titlebar(True)
+gui.Form1.lblReason.create(label,"Reason",True,1935,255,1,200,200,True,0,Arial,8,-2147483633,0)
+gui.Form1.lblReason.defaultvalue("")
+gui.Form1.lblReason.controlgroup(0)
+gui.Form1.txtReason.create(textbox,"",True,2985,300,0,200,500,True,0,Arial,8,-2147483643,1)
+gui.Form1.txtReason.defaultvalue("")
+gui.Form1.txtReason.controlgroup(0)
+gui.Form1.cmdAdd.create(button)
+gui.Form1.cmdAdd.caption("Add")
+gui.Form1.cmdAdd.visible(True)
+gui.Form1.cmdAdd.size(855,375)
+gui.Form1.cmdAdd.zorder(0)
+gui.Form1.cmdAdd.position(200,900)
+gui.Form1.cmdAdd.enabled(True)
+gui.Form1.cmdAdd.fontname("Arial")
+gui.Form1.cmdAdd.fontsize(8)
+gui.Form1.cmdAdd.event(click,cmdadd_click)
+gui.Form1.cmdAdd.defaultvalue("")
+gui.Form1.cmdAdd.controlgroup(0)
+gui.Form1.ddlReason.create(dropdownlist)
+gui.Form1.ddlReason.visible(True)
+gui.Form1.ddlReason.size(2985,330)
+gui.Form1.ddlReason.zorder(0)
+gui.Form1.ddlReason.position(3500,500)
+gui.Form1.ddlReason.enabled(True)
+gui.Form1.ddlReason.fontname("Arial")
+gui.Form1.ddlReason.fontsize(8)
+gui.Form1.ddlReason.defaultvalue("")
+gui.Form1.ddlReason.controlgroup(0)
+gui.Form1.cmdRemove.create(button)
+gui.Form1.cmdRemove.caption("Remove")
+gui.Form1.cmdRemove.visible(True)
+gui.Form1.cmdRemove.size(855,375)
+gui.Form1.cmdRemove.zorder(0)
+gui.Form1.cmdRemove.position(6600,460)
+gui.Form1.cmdRemove.enabled(True)
+gui.Form1.cmdRemove.fontname("Arial")
+gui.Form1.cmdRemove.fontsize(8)
+gui.Form1.cmdRemove.event(click,cmdremove_click)
+gui.Form1.cmdRemove.defaultvalue("")
+gui.Form1.cmdRemove.controlgroup(0)
+
+
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+
+
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+F.Intrinsic.Control.SetErrorHandler("Main_Err")
+F.Intrinsic.Control.ClearErrors
+'Created by SKC for Fred R. Rippy on 3/14/2016
+'This is run from a custom menu item.
+'This is a maintenance program that will populate exsiting reason, allow for new ones to be added, and old one to be removed.
+
+V.Local.sError.Declare(String)
+V.Local.sSql.Declare(String)
+V.Local.iCount.Declare(Long)
+
+F.ODBC.Connection!conx.OpenConnection(V.Ambient.PDSN,V.Ambient.PUser,V.Ambient.PPass)
+
+'Check to see if there are existing reasons
+V.Local.sSql.Set("Select * From GCG_3641_FRE_Reason Order by Reason")
+F.ODBC.Connection!conx.OpenLocalRecordsetRO("rstReason",V.Local.sSql)
+'If exist then add to drop down list
+
+F.Intrinsic.Control.DoUntil(V.ODBC.conx!rstReason.EOF,=,True)
+	Gui.Form1.ddlReason.AddItem(V.ODBC.conx!rstReason.FieldValTrim!Reason,V.Local.iCount)
+	F.Intrinsic.Math.Add(V.Local.iCount,1,V.Local.iCount)
+	F.ODBC.conx!rstReason.MoveNext
+F.Intrinsic.Control.Loop
+
+F.ODBC.conx!rstReason.Close
+
+Gui.Form1.ddlReason.ListIndex(0)
+Gui.Form1..Show
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Main_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3641_FRE_ReasonMaint.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Form1_unload)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.Main.End
+
+program.sub.cmdadd_click.start
+F.Intrinsic.Control.SetErrorHandler("cmdadd_click_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+V.Local.sSql.Declare(String)
+V.Local.sReason.Declare(String)
+V.Local.iCount.Declare(Long)
+
+V.Local.sReason.Set(V.Screen.Form1!txtReason.Text)
+
+V.Local.sSql.Set("Select Count (Reason) as Reason from GCG_3641_FRE_Reason")
+F.ODBC.Connection!conx.ExecuteAndReturn(V.Local.sSql,V.Local.iCount)
+F.Intrinsic.Math.Sub(V.Local.iCount,1,V.Local.iCount)
+
+'Make sure there is a value in the textbox
+F.Intrinsic.Control.If(V.Local.sReason.Trim,!=,"")
+	'Check if reason exists
+	F.Intrinsic.String.Build("Select * From GCG_3641_FRE_Reason Where Reason = '{0}'",V.Local.sReason,V.Local.sSql)
+	F.ODBC.Connection!conx.OpenLocalRecordsetRW("rstAdd",V.Local.sSql)
+	F.Intrinsic.Control.If(V.ODBC.conx!rstAdd.EOF,=,True)
+		'Add
+		F.ODBC.conx!rstAdd.AddNew
+		F.ODBC.conx!rstAdd.Set!Reason(V.Local.sReason.Trim)
+		F.ODBC.conx!rstAdd.Update
+		F.Intrinsic.Math.Add(V.Local.iCount,1,V.Local.iCount)
+		Gui.Form1.ddlReason.AddItem(V.Local.sReason.Trim,V.Local.iCount)
+		Gui.Form1.ddlReason.ListIndex(V.Local.iCount)
+		Gui.Form1.txtReason.Text("")
+		Gui.Form1.txtReason.SetFocus
+	F.Intrinsic.Control.Else
+		'Prompt User Reason Exists
+		F.Intrinsic.UI.Msgbox("Reason Already Exists!","Duplicate Value")
+		Gui.Form1.txtReason.Text("")
+		Gui.Form1.txtReason.SetFocus
+	F.Intrinsic.Control.EndIf
+	F.ODBC.conx!rstAdd.Close
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("cmdadd_click_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3641_FRE_ReasonMaint.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Form1_unload)
+Function.Intrinsic.Control.EndIf
+
+
+program.sub.cmdadd_click.end
+
+program.sub.cmdremove_click.start
+F.Intrinsic.Control.SetErrorHandler("cmdremove_click_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+V.Local.sSql.Declare(String)
+V.Local.sReason.Declare(String)
+V.Local.iCount.Declare(Long)
+
+V.Local.sReason.Set(V.Screen.Form1!ddlReason.Text)
+'remove the reason from the table and drop down list
+F.Intrinsic.String.Build("Delete From GCG_3641_FRE_Reason where Reason = '{0}'",V.Local.sReason.Trim,V.Local.sSql)
+F.ODBC.Connection!conx.Execute(V.Local.sSql)
+
+V.Local.iCount.Set(V.Screen.Form1!ddlReason.ListIndex)
+Gui.Form1.ddlReason.RemoveItem(V.Local.iCount)
+Gui.Form1.ddlReason.ListIndex(0)
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("cmdremove_click_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3641_FRE_ReasonMaint.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Form1_unload)
+Function.Intrinsic.Control.EndIf
+
+
+program.sub.cmdremove_click.end
+
+program.sub.form1_unload.start
+F.Intrinsic.Control.SetErrorHandler("form1_unload_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+F.ODBC.Connection!conx.Close
+
+F.Intrinsic.Control.End
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("form1_unload_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3641_FRE_ReasonMaint.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End
+Function.Intrinsic.Control.EndIf
+
+
+program.sub.form1_unload.end
+
+Program.Sub.Comments.Start
+${$0$}$GCG_3641_FRE_ReasonMaint$}$SKC$}$3/14/2016
+Program.Sub.Comments.End
+
