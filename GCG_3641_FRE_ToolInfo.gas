@@ -1,0 +1,428 @@
+Program.Sub.ScreenSU.Start
+gui.Form1..create
+gui.Form1..caption("Resharpen/Repair Information")
+gui.Form1..size(19365,9375)
+gui.Form1..minx(0)
+gui.Form1..miny(0)
+gui.Form1..position(0,0)
+gui.Form1..event(unload,form1_unload)
+gui.Form1..alwaysontop(False)
+gui.Form1..fontname("Arial")
+gui.Form1..fontsize(8)
+gui.Form1..forecolor(0)
+gui.Form1..fontstyle(,,,,)
+gui.Form1..BackColor(-2147483633)
+gui.Form1..controlbox(True)
+gui.Form1..maxbutton(True)
+gui.Form1..minbutton(True)
+gui.Form1..mousepointer(0)
+gui.Form1..moveable(True)
+gui.Form1..sizeable(True)
+gui.Form1..ShowInTaskBar(True)
+gui.Form1..titlebar(True)
+gui.Form1.chkTool.create(checkbox)
+gui.Form1.chkTool.caption("by Tool Number")
+gui.Form1.chkTool.visible(True)
+gui.Form1.chkTool.size(1410,255)
+gui.Form1.chkTool.zorder(0)
+gui.Form1.chkTool.position(200,200)
+gui.Form1.chkTool.enabled(True)
+gui.Form1.chkTool.alignment(0)
+gui.Form1.chkTool.fontname("Arial")
+gui.Form1.chkTool.fontsize(8)
+gui.Form1.chkTool.event(click,chktool_click)
+gui.Form1.chkTool.defaultvalue("")
+gui.Form1.chkTool.controlgroup(0)
+gui.Form1.chkJob.create(checkbox)
+gui.Form1.chkJob.caption("by Job Number")
+gui.Form1.chkJob.visible(True)
+gui.Form1.chkJob.size(1530,255)
+gui.Form1.chkJob.zorder(0)
+gui.Form1.chkJob.position(2310,200)
+gui.Form1.chkJob.enabled(True)
+gui.Form1.chkJob.alignment(0)
+gui.Form1.chkJob.fontname("Arial")
+gui.Form1.chkJob.fontsize(8)
+gui.Form1.chkJob.event(click,chkjob_click)
+gui.Form1.chkJob.defaultvalue("")
+gui.Form1.chkJob.controlgroup(0)
+gui.Form1.ddlType.create(dropdownlist)
+gui.Form1.ddlType.visible(True)
+gui.Form1.ddlType.size(2985,330)
+gui.Form1.ddlType.zorder(0)
+gui.Form1.ddlType.position(6200,200)
+gui.Form1.ddlType.enabled(True)
+gui.Form1.ddlType.fontname("Arial")
+gui.Form1.ddlType.fontsize(8)
+gui.Form1.ddlType.event(click,ddltype_click)
+gui.Form1.ddlType.defaultvalue("")
+gui.Form1.ddlType.controlgroup(0)
+gui.Form1.lblType.create(label,"Number",True,930,255,1,5200,215,True,1,Arial,8,-2147483633,0)
+gui.Form1.lblType.defaultvalue("")
+gui.Form1.lblType.controlgroup(0)
+gui.Form1.gsfgData.create(gsflexgrid)
+gui.Form1.gsfgData.FixedRows(0)
+gui.Form1.gsfgData.FixedCols(0)
+gui.Form1.gsfgData.visible(True)
+gui.Form1.gsfgData.size(18840,7095)
+gui.Form1.gsfgData.zorder(0)
+gui.Form1.gsfgData.position(100,1125)
+gui.Form1.gsfgData.enabled(True)
+
+
+Program.Sub.ScreenSU.End
+
+Program.Sub.Preflight.Start
+
+Variable.UDT.uTool.Define("sJob",String,Job)
+Variable.UDT.uTool.Define("sSuffix",String,Suffix)
+Variable.UDT.uTool.Define("sSeq",String,Seq)
+Variable.UDT.uTool.Define("sWC",String,WorkCenter)
+Variable.UDT.uTool.Define("fPunch",Float,AMT_RMVD_Punch)
+Variable.UDT.uTool.Define("fDie",Float,AMT_RMVD_Die)
+Variable.UDT.uTool.Define("fStrip",Float,AMT_RMVD_Stripper)
+Variable.UDT.uTool.Define("sEmpID",String,EmpID)
+Variable.UDT.uTool.Define("sName",String,EmpName)
+Variable.UDT.uTool.Define("sPart",String,Part)
+Variable.UDT.uTool.Define("sDesc",String,Description)
+Variable.UDT.uTool.Define("sReason",String,Reason)
+Variable.UDT.uTool.Define("sNote1",String,Note1)
+Variable.UDT.uTool.Define("sNote2",String,Note2)
+Variable.UDT.uTool.Define("sNote3",String,Note3)
+Variable.UDT.uTool.Define("dDate",Date,DateOut)
+Variable.uGlobal.uTool.Declare("uTool")
+Program.Sub.Preflight.End
+
+Program.Sub.Main.Start
+F.Intrinsic.Control.SetErrorHandler("Main_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+'Created by SKC on 3/17/2016 for Fred R Rippy
+'This is a custom menu item that will allow them to see the details of tool repair or replacement based on either Tool selection or Job selection.
+'Only the Max date will be displayed for the Part or Job.
+
+F.ODBC.Connection!conx.OpenConnection(V.Ambient.PDSN,V.Ambient.PUser,V.Ambient.PPass)
+
+F.Intrinsic.Control.CallSub(Buildstyle)
+
+Gui.Form1..Show
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("Main_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3641_FRE_ToolInfo.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Form1_unload)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.Main.End
+
+program.sub.form1_unload.start
+F.Intrinsic.Control.SetErrorHandler("form1_unload_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+F.ODBC.Connection!conx.Close
+F.Intrinsic.Control.End
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("form1_unload_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3641_FRE_ToolInfo.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.End
+Function.Intrinsic.Control.EndIf
+
+
+program.sub.form1_unload.end
+
+program.sub.chktool_click.start
+F.Intrinsic.Control.SetErrorHandler("chktool_click_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sSql.Declare(String)
+V.Local.iTool.Declare(Long)
+V.Local.iCount.Declare(Long)
+
+V.Local.iCount.Set(-1)
+
+V.Local.iTool.Set(V.Screen.Form1!chkTool.Value)
+
+F.Intrinsic.Control.If(V.Local.iTool,=,1)
+	Gui.Form1.chkJob.Value(0)
+	'Query based on Tool
+	V.Local.sSql.Set("Select Distinct Part from GCG_3641_FRE_GUIWC order by Part")
+	F.ODBC.Connection!conx.OpenLocalRecordsetRO("rstTool",V.Local.sSql)
+	'reset the screen in case a previous selection was made.
+	Gui.Form1.ddlType.ClearItems
+	V.uGlobal.uTool.Redim(-1,-1)
+	Gui.Form1.gsfgData.Visible(False)
+	Gui.Form1.gsfgData.Rows(1)
+	F.Intrinsic.Control.CallSub(Buildstyle)
+	Gui.Form1.gsfgData.Rows(2)
+	Gui.Form1.gsfgData.Visible(True)
+	'Update the drop down list
+	F.Intrinsic.Control.DoUntil(V.ODBC.conx!rstTool.EOF,=,True)
+		F.Intrinsic.Math.Add(V.Local.iCount,1,V.Local.iCount)
+		Gui.Form1.ddlType.AddItem(V.ODBC.conx!rstTool.FieldValTrim!Part,V.Local.iCount)
+		F.ODBC.conx!rstTool.MoveNext
+	F.Intrinsic.Control.Loop
+	F.ODBC.conx!rstTool.Close
+F.Intrinsic.Control.Else
+	Gui.Form1.chkJob.Value(1)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("chktool_click_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3641_FRE_ToolInfo.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Form1_unload)
+Function.Intrinsic.Control.EndIf
+
+
+program.sub.chktool_click.end
+
+program.sub.chkjob_click.start
+F.Intrinsic.Control.SetErrorHandler("chkjob_click_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sSql.Declare(String)
+V.Local.sJob.Declare(String)
+V.Local.iJob.Declare(Long)
+V.Local.iCount.Declare(Long)
+
+V.Local.iCount.Set(-1)
+
+V.Local.iJob.Set(V.Screen.Form1!chkJob.Value)
+
+F.Intrinsic.Control.If(V.Local.iJob,=,1)
+	Gui.Form1.chkTool.Value(0)
+	'Query based on Job
+	V.Local.sSql.Set("Select Job + '-' + Suffix as Job From GCG_3641_FRE_GUIWC Order by Job, Suffix")
+	F.ODBC.Connection!conx.OpenLocalRecordsetRO("rstJob",V.Local.sSql)
+	Gui.Form1.ddlType.ClearItems
+	'Clear the grid incase a previous selection was made
+	V.uGlobal.uTool.Redim(-1,-1)
+	Gui.Form1.gsfgData.Visible(False)
+	Gui.Form1.gsfgData.Rows(1)
+	F.Intrinsic.Control.CallSub(Buildstyle)
+	Gui.Form1.gsfgData.Visible(True)
+	F.Intrinsic.Control.DoUntil(V.ODBC.conx!rstJob.EOF,=,True)
+		'Fill the drop down
+		F.Intrinsic.Math.Add(V.Local.iCount,1,V.Local.iCount)
+		Gui.Form1.ddlType.AddItem(V.ODBC.conx!rstJob.FieldVal!Job,V.Local.iCount)
+		F.ODBC.conx!rstJob.MoveNext
+	F.Intrinsic.Control.Loop
+	F.ODBC.conx!rstJob.Close
+F.Intrinsic.Control.Else
+	Gui.Form1.chkTool.Value(1)
+F.Intrinsic.Control.EndIf
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("chkjob_click_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3641_FRE_ToolInfo.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Form1_unload)
+Function.Intrinsic.Control.EndIf
+
+
+program.sub.chkjob_click.end
+
+program.sub.ddltype_click.start
+F.Intrinsic.Control.SetErrorHandler("ddltype_click_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+V.Local.sSql.Declare(String)
+V.Local.iType.Declare(Long)
+V.Local.sJob.Declare(String)
+V.Local.sPart.Declare(String)
+
+'Fill the Grid once a selection is made from the Drop Down List
+'Only Max date will show for any Job or part selection.
+
+F.Intrinsic.Control.If(V.Screen.Form1!chkJob.Value,=,1)
+	V.Local.iType.Set(0)
+	V.Local.sJob.Set(V.Screen.Form1!ddlType.Text)
+	F.Intrinsic.String.Split(V.Local.sJob,"-",V.Local.sJob)
+	F.Intrinsic.String.Build("Select * from GCG_3641_FRE_GUIWC Where DateOut = (Select Max(DateOut) From GCG_3641_FRE_GUIWC Where Job = '{0}' and Suffix ='{1}' Group by Job, Suffix)",V.Local.sJob(0).Trim,V.Local.sJob(1).Trim,V.Local.sSql)
+
+F.Intrinsic.Control.ElseIf(V.Screen.Form1!chkTool.Value,=,1)
+	V.Local.iType.Set(1)
+	V.Local.sPart.Set(V.Screen.Form1!ddlType.Text)
+	F.Intrinsic.String.Build("Select * From GCG_3641_FRE_GUIWC where DateOut = (Select Max(DateOut) From GCG_3641_FRE_GUIWC where Part = '{0}' Group by Part)",V.Local.sPart.Trim,V.Local.sSql)
+F.Intrinsic.Control.EndIf
+
+F.ODBC.Connection!conx.OpenLocalRecordsetRO("rstData",V.Local.sSql)
+F.Intrinsic.Control.If(V.ODBC.conx!rstData.EOF,=,False)
+	F.Intrinsic.Variable.LoadUDTFromRecordset("conx","rstData","v.uGlobal.uTool",False,100)
+	Gui.Form1.gsfgData.LoadFromUDT("V.uGlobal.uTool","sJob*!*sSuffix*!*sPart*!*fPunch*!*fDie*!*fStrip*!*sReason*!*sEmpID*!*sName*!*dDate",2)
+F.Intrinsic.Control.EndIf
+F.ODBC.conx!rstData.Close
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("ddltype_click_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3641_FRE_ToolInfo.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(Form1_unload)
+Function.Intrinsic.Control.EndIf
+
+
+program.sub.ddltype_click.end
+
+Program.Sub.BuildStyle.Start
+F.Intrinsic.Control.SetErrorHandler("BuildStyle_Err")
+F.Intrinsic.Control.ClearErrors
+
+V.Local.sError.Declare(String)
+
+Gui.Form1.gsfgData.Rows(2)
+Gui.Form1.gsfgData.Cols(10)
+Gui.Form1.gsfgData.FixedRows(1)
+
+Gui.Form1.gsfgData.SetColumnPercentages(".10:.10:.10:.10:.10:.10:.10:.10:.10:.10")
+
+'Column 0
+'Style 1
+Gui.Form1.gsfgData.BuildStyle(1,0,"Type","Locked",True)
+Gui.Form1.gsfgData.BuildStyle(1,0,"Format","Alignment",4)
+
+'Style 2
+Gui.Form1.gsfgData.BuildStyle(2,0,"Type","Locked",True)
+Gui.Form1.gsfgData.BuildStyle(2,0,"Format","Alignment",2)
+
+
+'Column 1
+'Style 1
+Gui.Form1.gsfgData.BuildStyle(1,1,"Type","Locked",True)
+Gui.Form1.gsfgData.BuildStyle(1,1,"Format","Alignment",4)
+
+'Style 2
+Gui.Form1.gsfgData.BuildStyle(2,1,"Type","Locked",True)
+Gui.Form1.gsfgData.BuildStyle(2,1,"Format","Alignment",2)
+
+
+'Column 2
+'Style 1
+Gui.Form1.gsfgData.BuildStyle(1,2,"Type","Locked",True)
+Gui.Form1.gsfgData.BuildStyle(1,2,"Format","Alignment",4)
+
+'Style 2
+Gui.Form1.gsfgData.BuildStyle(2,2,"Type","Locked",True)
+Gui.Form1.gsfgData.BuildStyle(2,2,"Format","Alignment",2)
+
+
+'Column 3
+'Style 1
+Gui.Form1.gsfgData.BuildStyle(1,3,"Type","Locked",True)
+Gui.Form1.gsfgData.BuildStyle(1,3,"Format","Alignment",4)
+
+'Style 2
+Gui.Form1.gsfgData.BuildStyle(2,3,"Type","Locked",True)
+Gui.Form1.gsfgData.BuildStyle(2,3,"Format","Alignment",6)
+
+
+'Column 4
+'Style 1
+Gui.Form1.gsfgData.BuildStyle(1,4,"Type","Locked",True)
+Gui.Form1.gsfgData.BuildStyle(1,4,"Format","Alignment",4)
+
+'Style 2
+Gui.Form1.gsfgData.BuildStyle(2,4,"Type","Locked",True)
+Gui.Form1.gsfgData.BuildStyle(2,4,"Format","Alignment",6)
+
+
+
+'Column 5
+'Style 1
+Gui.Form1.gsfgData.BuildStyle(1,5,"Type","Locked",True)
+Gui.Form1.gsfgData.BuildStyle(1,5,"Format","Alignment",4)
+
+'Style 2
+Gui.Form1.gsfgData.BuildStyle(2,5,"Type","Locked",True)
+Gui.Form1.gsfgData.BuildStyle(2,5,"Format","Alignment",6)
+
+
+'Column 6
+'Style 1
+Gui.Form1.gsfgData.BuildStyle(1,6,"Type","Locked",True)
+Gui.Form1.gsfgData.BuildStyle(1,6,"Format","Alignment",4)
+
+'Style 2
+Gui.Form1.gsfgData.BuildStyle(2,6,"Type","Locked",True)
+Gui.Form1.gsfgData.BuildStyle(2,6,"Format","Alignment",2)
+
+
+'Column 7
+'Style 1
+Gui.Form1.gsfgData.BuildStyle(1,7,"Type","Locked",True)
+Gui.Form1.gsfgData.BuildStyle(1,7,"Format","Alignment",4)
+
+'Style 2
+Gui.Form1.gsfgData.BuildStyle(2,7,"Type","Locked",True)
+Gui.Form1.gsfgData.BuildStyle(2,7,"Format","Alignment",2)
+
+
+'Column 8
+'Style 1
+Gui.Form1.gsfgData.BuildStyle(1,8,"Type","Locked",True)
+Gui.Form1.gsfgData.BuildStyle(1,8,"Format","Alignment",4)
+
+'Style 2
+Gui.Form1.gsfgData.BuildStyle(2,8,"Type","Locked",True)
+Gui.Form1.gsfgData.BuildStyle(2,8,"Format","Alignment",2)
+
+
+'Column 9
+'Style 1
+Gui.Form1.gsfgData.BuildStyle(1,9,"Type","Locked",True)
+Gui.Form1.gsfgData.BuildStyle(1,9,"Format","Alignment",4)
+
+'Style 2
+Gui.Form1.gsfgData.BuildStyle(2,9,"Type","Locked",True)
+Gui.Form1.gsfgData.BuildStyle(2,9,"Format","Alignment",4)
+
+Gui.Form1.gsfgData.TextMatrix(0,0,"Job")
+Gui.Form1.gsfgData.TextMatrix(1,0,"Suffix")
+Gui.Form1.gsfgData.TextMatrix(2,0,"Part")
+Gui.Form1.gsfgData.TextMatrix(3,0,"Punch")
+Gui.Form1.gsfgData.TextMatrix(4,0,"Die")
+Gui.Form1.gsfgData.TextMatrix(5,0,"Stripper")
+Gui.Form1.gsfgData.TextMatrix(6,0,"Reason")
+Gui.Form1.gsfgData.TextMatrix(7,0,"Emp ID")
+Gui.Form1.gsfgData.TextMatrix(8,0,"Name")
+Gui.Form1.gsfgData.TextMatrix(9,0,"Date Out")
+
+Gui.Form1.gsfgData.ApplyStyle(0,1)
+Gui.Form1.gsfgData.ApplyStyle(1,2)
+
+
+F.Intrinsic.Control.ExitSub
+
+F.Intrinsic.Control.Label("BuildStyle_Err")
+F.Intrinsic.Control.If(V.Ambient.ErrorNumber,<>,0)
+	Function.Intrinsic.String.Concat("Project: GCG_3641_FRE_ToolInfo.gas",V.Ambient.Newline,V.Ambient.Newline,"Subroutine: ",V.Ambient.CurrentSubroutine,V.Ambient.NewLine,"Error Occurred ",V.Ambient.ErrorNumber," with description ",V.Ambient.ErrorDescription,V.Local.sError)
+	F.Intrinsic.UI.Msgbox(V.Local.sError)
+	F.Intrinsic.Control.CallSub(form1_unload)
+Function.Intrinsic.Control.EndIf
+
+
+Program.Sub.BuildStyle.End
+
+Program.Sub.Comments.Start
+${$0$}$GCG_3641_FRE_ToolInfo$}$SKC$}$3/16/2016
+Program.Sub.Comments.End
+
